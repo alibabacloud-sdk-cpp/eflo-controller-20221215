@@ -20,6 +20,7 @@ namespace Models
       DARABONBA_PTR_TO_JSON(NewNodeGroupName, newNodeGroupName_);
       DARABONBA_PTR_TO_JSON(NodeGroupId, nodeGroupId_);
       DARABONBA_PTR_TO_JSON(RamRoleName, ramRoleName_);
+      DARABONBA_PTR_TO_JSON(SystemDisk, systemDisk_);
       DARABONBA_PTR_TO_JSON(UserData, userData_);
     };
     friend void from_json(const Darabonba::Json& j, UpdateNodeGroupRequest& obj) { 
@@ -30,6 +31,7 @@ namespace Models
       DARABONBA_PTR_FROM_JSON(NewNodeGroupName, newNodeGroupName_);
       DARABONBA_PTR_FROM_JSON(NodeGroupId, nodeGroupId_);
       DARABONBA_PTR_FROM_JSON(RamRoleName, ramRoleName_);
+      DARABONBA_PTR_FROM_JSON(SystemDisk, systemDisk_);
       DARABONBA_PTR_FROM_JSON(UserData, userData_);
     };
     UpdateNodeGroupRequest() = default ;
@@ -43,9 +45,40 @@ namespace Models
     };
     virtual void fromMap(const Darabonba::Json &obj) override { from_json(obj, *this); validate(); };
     virtual Darabonba::Json toMap() const override { Darabonba::Json obj; to_json(obj, *this); return obj; };
+    class SystemDisk : public Darabonba::Model {
+    public:
+      friend void to_json(Darabonba::Json& j, const SystemDisk& obj) { 
+        DARABONBA_PTR_TO_JSON(PerformanceLevel, performanceLevel_);
+      };
+      friend void from_json(const Darabonba::Json& j, SystemDisk& obj) { 
+        DARABONBA_PTR_FROM_JSON(PerformanceLevel, performanceLevel_);
+      };
+      SystemDisk() = default ;
+      SystemDisk(const SystemDisk &) = default ;
+      SystemDisk(SystemDisk &&) = default ;
+      SystemDisk(const Darabonba::Json & obj) { from_json(obj, *this); };
+      virtual ~SystemDisk() = default ;
+      SystemDisk& operator=(const SystemDisk &) = default ;
+      SystemDisk& operator=(SystemDisk &&) = default ;
+      virtual void validate() const override {
+      };
+      virtual void fromMap(const Darabonba::Json &obj) override { from_json(obj, *this); validate(); };
+      virtual Darabonba::Json toMap() const override { Darabonba::Json obj; to_json(obj, *this); return obj; };
+      virtual bool empty() const override { return this->performanceLevel_ == nullptr; };
+      // performanceLevel Field Functions 
+      bool hasPerformanceLevel() const { return this->performanceLevel_ != nullptr;};
+      void deletePerformanceLevel() { this->performanceLevel_ = nullptr;};
+      inline string getPerformanceLevel() const { DARABONBA_PTR_GET_DEFAULT(performanceLevel_, "") };
+      inline SystemDisk& setPerformanceLevel(string performanceLevel) { DARABONBA_PTR_SET_VALUE(performanceLevel_, performanceLevel) };
+
+
+    protected:
+      shared_ptr<string> performanceLevel_ {};
+    };
+
     virtual bool empty() const override { return this->fileSystemMountEnabled_ == nullptr
         && this->imageId_ == nullptr && this->keyPairName_ == nullptr && this->loginPassword_ == nullptr && this->newNodeGroupName_ == nullptr && this->nodeGroupId_ == nullptr
-        && this->ramRoleName_ == nullptr && this->userData_ == nullptr; };
+        && this->ramRoleName_ == nullptr && this->systemDisk_ == nullptr && this->userData_ == nullptr; };
     // fileSystemMountEnabled Field Functions 
     bool hasFileSystemMountEnabled() const { return this->fileSystemMountEnabled_ != nullptr;};
     void deleteFileSystemMountEnabled() { this->fileSystemMountEnabled_ = nullptr;};
@@ -95,6 +128,15 @@ namespace Models
     inline UpdateNodeGroupRequest& setRamRoleName(string ramRoleName) { DARABONBA_PTR_SET_VALUE(ramRoleName_, ramRoleName) };
 
 
+    // systemDisk Field Functions 
+    bool hasSystemDisk() const { return this->systemDisk_ != nullptr;};
+    void deleteSystemDisk() { this->systemDisk_ = nullptr;};
+    inline const UpdateNodeGroupRequest::SystemDisk & getSystemDisk() const { DARABONBA_PTR_GET_CONST(systemDisk_, UpdateNodeGroupRequest::SystemDisk) };
+    inline UpdateNodeGroupRequest::SystemDisk getSystemDisk() { DARABONBA_PTR_GET(systemDisk_, UpdateNodeGroupRequest::SystemDisk) };
+    inline UpdateNodeGroupRequest& setSystemDisk(const UpdateNodeGroupRequest::SystemDisk & systemDisk) { DARABONBA_PTR_SET_VALUE(systemDisk_, systemDisk) };
+    inline UpdateNodeGroupRequest& setSystemDisk(UpdateNodeGroupRequest::SystemDisk && systemDisk) { DARABONBA_PTR_SET_RVALUE(systemDisk_, systemDisk) };
+
+
     // userData Field Functions 
     bool hasUserData() const { return this->userData_ != nullptr;};
     void deleteUserData() { this->userData_ = nullptr;};
@@ -103,21 +145,23 @@ namespace Models
 
 
   protected:
-    // Specifies whether to mount file storage on nodes.
+    // Specifies whether file storage mounting is supported.
     shared_ptr<bool> fileSystemMountEnabled_ {};
-    // The ID of the image for the node group. If you omit this parameter, the image remains unchanged.
+    // The default image ID of the node group. If this parameter is not specified, the image remains unchanged.
     shared_ptr<string> imageId_ {};
-    // The name of the key pair.
+    // The key pair name.
     shared_ptr<string> keyPairName_ {};
-    // The login password for the nodes in the node group.
+    // The logon password of the machines in the node group.
     shared_ptr<string> loginPassword_ {};
-    // The new name of the node group.
+    // The node group name.
     shared_ptr<string> newNodeGroupName_ {};
-    // The ID of the node group.
+    // The node group ID.
     shared_ptr<string> nodeGroupId_ {};
-    // To query the RAM roles that you have created, call the ListRoles operation in the RAM API. The trust policy for the role must specify Intelligent Computing Lingjun as the trusted entity. Note: You cannot remove a role by clearing this parameter.
+    // The RAM role name of the node. You can call the RAM API ListRoles to query the node RAM roles that you have created. The trusted entity of the role must be set to Lingjun AI Computing Service.
+    // Note: Clearing an existing role is not supported.
     shared_ptr<string> ramRoleName_ {};
-    // The user data. This script runs at node startup.
+    shared_ptr<UpdateNodeGroupRequest::SystemDisk> systemDisk_ {};
+    // The custom executable shell script. The script must be Base64-encoded. The maximum size of the raw data is 16 KB.
     shared_ptr<string> userData_ {};
   };
 
